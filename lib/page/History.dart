@@ -1,5 +1,7 @@
 import 'package:adminshop/api/api.dart';
 import 'package:adminshop/model/OrderBoardcash.dart';
+import 'package:adminshop/page/ListDelivery.dart';
+import 'package:adminshop/page/ListInvoice.dart';
 import 'package:adminshop/page/ListOrderAccept.dart';
 import 'package:adminshop/share/saveUser.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +30,13 @@ class _HistoryState extends State<History> {
     setState(() {
       _countAccept = _orderAccept.data.length;
     });
-    _orderAccept = await apiCall.getOrderBoardcastByStatus(shopID, 'INVOICE');
+    _orderAccept = await apiCall.getOrderBoardcastByStatus(shopID, 'INVOID');
     setState(() {
       _countInvoice = _orderAccept.data.length;
+    });
+    _orderAccept = await apiCall.getOrderBoardcastByStatus(shopID, 'DELIVERY');
+    setState(() {
+      _countDelivery = _orderAccept.data.length;
     });
   }
 
@@ -109,7 +115,7 @@ class _HistoryState extends State<History> {
                     child: Text(
                       'ລາຍການຍອມຮັບສົ່ງສິນຄ້າ ',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -122,47 +128,55 @@ class _HistoryState extends State<History> {
   }
 
   Widget _crateInvoice() {
-    return Container(
-      height: 100,
-      width: double.infinity,
-      child: Card(
-        color: Colors.grey[100],
-        child: Container(
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 32),
-                    child: Container(
-                      height: 82,
-                      width: 70,
-                      child: Center(
-                          child: Text(
-                        _countInvoice.toString(),
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green),
-                      )),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(50)),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ListInvoice()))
+            .whenComplete(() => null);
+      },
+      child: Container(
+        height: 100,
+        width: double.infinity,
+        child: Card(
+          color: Colors.grey[100],
+          child: Container(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 32),
+                      child: Container(
+                        height: 82,
+                        width: 70,
+                        child: Center(
+                            child: Text(
+                          _countInvoice.toString(),
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        )),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(50)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 7,
-                child: Container(
-                  child: Text(
-                    'ລາຍການອອກໃບສະເໜີລາຄາ',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    child: Text(
+                      'ລາຍການອອກໃບສະເໜີລາຄາ',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -170,47 +184,55 @@ class _HistoryState extends State<History> {
   }
 
   Widget _createDelivery() {
-    return Container(
-      height: 100,
-      width: double.infinity,
-      child: Card(
-        color: Colors.grey[100],
-        child: Container(
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 32),
-                    child: Container(
-                      height: 82,
-                      width: 70,
-                      child: Center(
-                          child: Text(
-                        _countDelivery.toString(),
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green),
-                      )),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(50)),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ListDelivery()))
+            .whenComplete(() => null);
+      },
+      child: Container(
+        height: 100,
+        width: double.infinity,
+        child: Card(
+          color: Colors.grey[100],
+          child: Container(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 32),
+                      child: Container(
+                        height: 82,
+                        width: 70,
+                        child: Center(
+                            child: Text(
+                          _countDelivery.toString(),
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        )),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(50)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 7,
-                child: Container(
-                  child: Text(
-                    'ລາຍການສົ່ງເຄື່ອງ',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    child: Text(
+                      'ລາຍການສົ່ງເຄື່ອງ',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

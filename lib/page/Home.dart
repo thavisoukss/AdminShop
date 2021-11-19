@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
     await getShopID(shareName: "shopID").then((value) {
       shopID = value;
     });
+    
     await apiCall.getOrderBoardcast(shopID).then((value) {
       setState(() {
         _orderBoardcast = value;

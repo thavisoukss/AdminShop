@@ -1,25 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adminshop/model/GetOrderAccept.dart';
 import 'package:adminshop/model/Login.dart';
 import 'package:adminshop/model/OrderBoardcash.dart';
 import 'package:adminshop/model/OrderDetail.dart';
 import 'package:adminshop/share/shareConstant.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 class apiCall {
   static var dio = new Dio();
   static UserLogin _userlogin = new UserLogin();
   static OrderDetail _orderDetail = new OrderDetail();
   static OrderBoardcast _orderBoardcast = new OrderBoardcast();
+  static GetOrderAccept _getOrderAccept = new GetOrderAccept();
 
-  static Future<UserLogin> login(var user, var password) async {
+  static Future<UserLogin> login(var user, var password, var token) async {
     print('call api');
     var data = {
       "username": user,
       "password": password,
-      "usertype": "DISTRIBUTOR"
+      "usertype": "DISTRIBUTOR",
+      "devideToken": token
     };
     print(data);
 
@@ -127,6 +129,28 @@ class apiCall {
     }
   }
 
+  static Future<GetOrderAccept> getOrderAccept(var orderNo) async {
+    print(' start call api Get orderAccept ');
+
+    var data = {"ORDER_NO": orderNo};
+
+    try {
+      Response response = await dio.post(
+        ShareUrl.getOrderAccept,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        }),
+        data: jsonEncode(data),
+      );
+      print(response.data);
+      _getOrderAccept = GetOrderAccept.fromJson(response.data);
+      return _getOrderAccept;
+    } on DioError catch (e) {
+      print(e);
+      return _getOrderAccept;
+    }
+  }
+
   static Future<String> invoidCreate(var invoiceNo, orderNo, orderAcceptNo,
       totalAmount, dateTime, deliveryName, issueName) async {
     print(' start call api Invoice Create ');
@@ -142,11 +166,36 @@ class apiCall {
       "P_DELIVERY_NAME": deliveryName,
       "P_ISSUE_NAME": issueName
     };
-    print(data);
+    print(data.toString());
 
     try {
       Response response = await dio.post(
-        ShareUrl.orderAccept,
+        ShareUrl.invoidCreate,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        }),
+        data: jsonEncode(data),
+      );
+      print(response.data);
+      res = response.data['status'];
+
+      return res;
+    } on DioError catch (e) {
+      print(e);
+      return res;
+    }
+  }
+
+  static Future<String> closeOrder(var name, orderNo, remark) async {
+    print(' start call api  Close order  ');
+    String res;
+
+    var data = {"CLOSE_NAME": name, "ORDER_NO": orderNo, "REMARKS": remark};
+    print(data.toString());
+
+    try {
+      Response response = await dio.post(
+        ShareUrl.closeOrder,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
         }),
@@ -180,7 +229,7 @@ class apiCall {
     print(data);
     try {
       Response response = await dio.post(
-        ShareUrl.orderAccept,
+        ShareUrl.deliveryCreate,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
         }),
@@ -220,4 +269,6 @@ class apiCall {
       return _orderBoardcast;
     }
   }
+
+
 }

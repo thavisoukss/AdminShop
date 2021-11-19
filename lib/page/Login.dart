@@ -1,9 +1,13 @@
 import 'package:adminshop/model/Login.dart';
+import 'dart:io';
 import 'package:adminshop/page/ButtomNavigator.dart';
 import 'package:adminshop/share/dialog.dart';
 import 'package:adminshop/share/saveUser.dart';
 import 'package:adminshop/api/api.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:adminshop/main.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -15,6 +19,56 @@ class _LoginState extends State<Login> {
   UserLogin _userlogin;
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  var token;
+
+  void showNoti() async {
+    var notificationDateTime = DateTime.now().add(Duration(seconds: 10));
+
+    var androidPlatform = AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        sound: RawResourceAndroidNotificationSound('sound2'),
+        importance: Importance.max,
+        priority: Priority.high);
+
+    var IOSPltatform = IOSNotificationDetails(
+        sound: 'sound2.mp3',
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true);
+
+    var platformChanel =
+        NotificationDetails(android: androidPlatform, iOS: IOSPltatform);
+
+    await flutterLocalNotificationsPlugin.schedule(
+        0, 'test', 'hello', notificationDateTime, platformChanel);
+
+    print('done send notification sms');
+  }
+
+  void aboutNotification() async {
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+    if (Platform.isAndroid) {
+      await firebaseMessaging.configure(onBackgroundMessage: (message) {
+        print('hello onLunch');
+        showNoti();
+      }, onMessage: (message) {
+        print('hello onMessage');
+        showNoti();
+      }, onResume: (message) {
+        print('hello OnResume');
+        showNoti();
+      });
+    } else if (Platform.isIOS) {
+      await firebaseMessaging.configure(onLaunch: (message) {
+        print('hello onLunch');
+      }, onMessage: (message) {
+        print('hello onMessage');
+      }, onResume: (message) {
+        print('hello OnResume');
+      });
+    }
+  }
 
   _shareUser(var name, var user) {
     saveUser(shareName: name, value: user);
@@ -28,7 +82,7 @@ class _LoginState extends State<Login> {
     var user = userController.text;
     var password = passwordController.text;
     try {
-      _userlogin = await apiCall.login(user, password);
+      _userlogin = await apiCall.login(user, password, token);
       print(_userlogin.status);
       if (_userlogin.status == 'success') {
         _shareUser('username', _userlogin.userInfo.username);
@@ -42,6 +96,22 @@ class _LoginState extends State<Login> {
     } on Exception catch (_) {
       showErrorMessage(context, 'some thing wrong');
     }
+  }
+
+  getToken() async {
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+    String getToken = await firebaseMessaging.getToken();
+    setState(() {
+      token = getToken;
+    });
+    print("my token is " + token);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getToken();
+    super.initState();
   }
 
   @override

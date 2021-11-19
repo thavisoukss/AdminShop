@@ -1,4 +1,6 @@
 import 'package:adminshop/model/OrderBoardcash.dart';
+import 'package:adminshop/page/CreateDelivery.dart';
+import 'package:adminshop/page/CreateInvoice.dart';
 import 'package:adminshop/share/saveUser.dart';
 import 'package:flutter/material.dart';
 import 'package:adminshop/api/api.dart';
@@ -84,16 +86,16 @@ class _ListOrderAcceptState extends State<ListOrderAccept> {
   Widget _detail(Data data) {
     return GestureDetector(
       onTap: () {
-//        Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//                builder: (context) => OrderDetail(
-//                    OrderNo: data.oRDERNO,
-//                    ShopID: data.sHOPID,
-//                    ShopName: data.sHOPNAME,
-//                    DistID: data.dISTRIBUTORID,
-//                    DistName: data.dISTRIBUTORNAME)))
-//            .whenComplete(getOrderBoardCash);
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateInvoice(
+                        OrderNo: data.oRDERNO,
+                        ShopID: data.sHOPID,
+                        ShopName: data.sHOPNAME,
+                        DistID: data.dISTRIBUTORID,
+                        DistName: data.dISTRIBUTORNAME)))
+            .whenComplete(getOrderBoardCash);
       },
       child: Container(
         child: Padding(

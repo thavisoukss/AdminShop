@@ -2,8 +2,9 @@ class OrderDetail {
   String status;
   String message;
   List<Data> data;
+  int total;
 
-  OrderDetail({this.status, this.message, this.data});
+  OrderDetail({this.status, this.message, this.data, this.total});
 
   OrderDetail.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -14,6 +15,7 @@ class OrderDetail {
         data.add(new Data.fromJson(v));
       });
     }
+    total = json['total'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class OrderDetail {
     if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
+    data['total'] = this.total;
     return data;
   }
 }
@@ -31,10 +34,10 @@ class Data {
   int iTEMID;
   String iTEMCODE;
   String iTEMNAME;
-  int sUMAMOUNT;
+  int aMOUNT;
   int pRICE;
   String cCY;
-  int sUMSUBTOTAL;
+  int sUBTOTAL;
   String dESCRITION;
   String oRDERNO;
   String iNVOIDNO;
@@ -43,10 +46,10 @@ class Data {
       {this.iTEMID,
       this.iTEMCODE,
       this.iTEMNAME,
-      this.sUMAMOUNT,
+      this.aMOUNT,
       this.pRICE,
       this.cCY,
-      this.sUMSUBTOTAL,
+      this.sUBTOTAL,
       this.dESCRITION,
       this.oRDERNO,
       this.iNVOIDNO});
@@ -55,10 +58,10 @@ class Data {
     iTEMID = json['ITEM_ID'];
     iTEMCODE = json['ITEM_CODE'];
     iTEMNAME = json['ITEM_NAME'];
-    sUMAMOUNT = json['SUM(AMOUNT)'];
+    aMOUNT = json['AMOUNT'];
     pRICE = json['PRICE'];
     cCY = json['CCY'];
-    sUMSUBTOTAL = json['SUM(SUB_TOTAL)'];
+    sUBTOTAL = json['SUB_TOTAL'];
     dESCRITION = json['DESCRITION'];
     oRDERNO = json['ORDER_NO'];
     iNVOIDNO = json['INVOID_NO'];
@@ -69,10 +72,10 @@ class Data {
     data['ITEM_ID'] = this.iTEMID;
     data['ITEM_CODE'] = this.iTEMCODE;
     data['ITEM_NAME'] = this.iTEMNAME;
-    data['SUM(AMOUNT)'] = this.sUMAMOUNT;
+    data['AMOUNT'] = this.aMOUNT;
     data['PRICE'] = this.pRICE;
     data['CCY'] = this.cCY;
-    data['SUM(SUB_TOTAL)'] = this.sUMSUBTOTAL;
+    data['SUB_TOTAL'] = this.sUBTOTAL;
     data['DESCRITION'] = this.dESCRITION;
     data['ORDER_NO'] = this.oRDERNO;
     data['INVOID_NO'] = this.iNVOIDNO;
